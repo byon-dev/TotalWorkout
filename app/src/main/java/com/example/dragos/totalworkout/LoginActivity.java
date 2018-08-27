@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -18,7 +19,7 @@ import org.json.JSONObject;
 
 
 public class LoginActivity extends AppCompatActivity {
-
+    Button BTN_Continue;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
         final Button bLogin = (Button) findViewById(R.id.bLogin);
         final TextView registerLink = (TextView) findViewById(R.id.tvRegisterHere);
 
-        registerLink.setOnClickListener(new View.OnClickListener() {
+        registerLink.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent registerIntent = new Intent( LoginActivity.this , RegisterActivity.class);
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        bLogin.setOnClickListener(new View.OnClickListener() {
+        bLogin.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 final String username = etUsername.getText().toString();
@@ -82,6 +83,14 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+        BTN_Continue = (Button) findViewById( R.id.BTN_cancel_log_in);
 
+        BTN_Continue.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent IntentLoadMainMenuActivity = new Intent(LoginActivity.this, MainMenuActivity.class);
+                startActivity(IntentLoadMainMenuActivity);
+            }
+        });
     }
 }
