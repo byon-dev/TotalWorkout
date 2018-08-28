@@ -20,9 +20,7 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".MainMenuActivity" />
-        <activity
-            android:name=".WorkoutTotalBody"
-            android:label="@string/title_activity_workout_total_body"></activity>
+        <activity android:name=".WorkoutTotalBody" />
     </application>
 
 </manifest>
