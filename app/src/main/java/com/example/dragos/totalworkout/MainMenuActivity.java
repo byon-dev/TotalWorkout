@@ -19,6 +19,16 @@ public class MainMenuActivity extends AppCompatActivity {
         final EditText etAge = (EditText) findViewById(R.id.etAge);
         final TextView welcomeMessage = (TextView) findViewById(R.id.tvWelcomeMsg);
 
+        Intent intent = getIntent();
+        String name = intent.getStringExtra("name");
+        String username = intent.getStringExtra("username");
+        int age = intent.getIntExtra("age",-1);
+
+        String message = name + " welcome to your account";
+        welcomeMessage.setText(message);
+        etUsername.setText(username);
+        etAge.setText(age + "");
+
         total_workout_button=(ImageButton) findViewById(R.id.BTN_wk_total_body);
 
         total_workout_button.setOnClickListener(new View.OnClickListener() {
