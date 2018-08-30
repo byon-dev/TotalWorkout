@@ -2,6 +2,7 @@ package com.example.dragos.totalworkout;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +14,12 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,10 +27,54 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity {
     Button BTN_Continue;
+    LoginButton loginButton;
+    TextView loginStatus;
+    CallbackManager callbackManager;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_login);
+
+        loginButton = (LoginButton) findViewById(R.id.fb_login_bn);
+        loginStatus = (TextView) findViewById(R.id.loginStatus);
+        callbackManager = CallbackManager.Factory.create();
+        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+
+                Intent IntentLoadMainMenuActivity = new Intent(LoginActivity.this, MainMenuActivity.class);
+                IntentLoadMainMenuActivity.putExtra("name","User FB");
+                IntentLoadMainMenuActivity.putExtra("username",loginResult.getAccessToken().getUserId());
+                IntentLoadMainMenuActivity.putExtra("age",0);
+
+
+                startActivity(IntentLoadMainMenuActivity);
+
+
+
+                /*loginStatus.setText("Login Succes \n" +
+                        loginResult.getAccessToken().getUserId()+
+                        "\n"+loginResult.getAccessToken().getToken()
+
+                );*/
+
+            }
+
+            @Override
+            public void onCancel() {
+
+                loginStatus.setText("Login Cancelled");
+
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+
+            }
+        });
 
         final EditText etUsername = (EditText) findViewById(R.id.etUsername);
         final EditText etPassword = (EditText) findViewById(R.id.etPassword);
@@ -92,5 +143,10 @@ public class LoginActivity extends AppCompatActivity {
                 startActivity(IntentLoadMainMenuActivity);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+            callbackManager.onActivityResult(requestCode, resultCode,data);
     }
 }
