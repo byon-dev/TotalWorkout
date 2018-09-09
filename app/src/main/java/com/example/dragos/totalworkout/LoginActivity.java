@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,10 +15,13 @@ import android.widget.TextView;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 
@@ -45,21 +49,21 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
 
-                Intent IntentLoadMainMenuActivity = new Intent(LoginActivity.this, MainMenuActivity.class);
-                IntentLoadMainMenuActivity.putExtra("name","User FB");
-                IntentLoadMainMenuActivity.putExtra("username",loginResult.getAccessToken().getUserId());
-                IntentLoadMainMenuActivity.putExtra("age",0);
 
 
-                startActivity(IntentLoadMainMenuActivity);
+                GraphRequest.newMeRequest(
+                        AccessToken.getCurrentAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+                            @Override
+                            public void onCompleted(JSONObject user, GraphResponse response) {
+
+                                Intent IntentLoadMainMenuActivity = new Intent(LoginActivity.this, MainMenuActivity.class);
+                                IntentLoadMainMenuActivity.putExtra("user",user.optString("name"));
+                                IntentLoadMainMenuActivity.putExtra("userid",user.optString("id"));
+                                LoginActivity.this.startActivity(IntentLoadMainMenuActivity);
 
 
-
-                /*loginStatus.setText("Login Succes \n" +
-                        loginResult.getAccessToken().getUserId()+
-                        "\n"+loginResult.getAccessToken().getToken()
-
-                );*/
+                            }
+                        }).executeAsync();
 
             }
 
@@ -104,12 +108,10 @@ public class LoginActivity extends AppCompatActivity {
 
                             if(success){
                                 String name = jsonResponse.getString("name");
-                                int age = jsonResponse.getInt("age");
 
                                 Intent intent = new Intent(LoginActivity.this, MainMenuActivity.class);
-                                intent.putExtra("name",name);
-                                intent.putExtra("username",username);
-                                intent.putExtra("age",age);
+                                intent.putExtra("user",name);
+
 
                                 LoginActivity.this.startActivity(intent);
 
@@ -140,6 +142,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent IntentLoadMainMenuActivity = new Intent(LoginActivity.this, MainMenuActivity.class);
+                IntentLoadMainMenuActivity.putExtra("user","Anonymous");
                 startActivity(IntentLoadMainMenuActivity);
             }
         });

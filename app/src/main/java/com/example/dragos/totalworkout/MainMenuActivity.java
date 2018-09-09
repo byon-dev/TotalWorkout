@@ -6,7 +6,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class MainMenuActivity extends AppCompatActivity {
     ImageButton total_workout_button;
@@ -15,19 +21,28 @@ public class MainMenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
 
-        final EditText etUsername = (EditText) findViewById(R.id.etUsername);
-        final EditText etAge = (EditText) findViewById(R.id.etAge);
-        final TextView welcomeMessage = (TextView) findViewById(R.id.tvWelcomeMsg);
+
+        final TextView etUser = (TextView) findViewById(R.id.tvUser);
+        final ImageView ivFacebook = findViewById(R.id.ivFacebook);
+
 
         Intent intent = getIntent();
-        String name = intent.getStringExtra("name");
-        String username = intent.getStringExtra("username");
-        int age = intent.getIntExtra("age",-1);
 
-        String message = name + " welcome to your account";
-        welcomeMessage.setText(message);
-        etUsername.setText(username);
-        etAge.setText(age + "");
+        String user = intent.getStringExtra("user");
+        String userid = intent.getStringExtra("userid");
+       /* ImageView profile = intent
+*/
+
+
+        etUser.setText(user);
+
+        try {
+            URL profile_picture =  new URL("https://graph.facebook.com/"+userid+"/picture?width=250&height=250");
+            Picasso.get().load(profile_picture.toString()).into(ivFacebook);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
 
         total_workout_button=(ImageButton) findViewById(R.id.BTN_wk_total_body);
 
